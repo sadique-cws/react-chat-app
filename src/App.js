@@ -1,6 +1,3 @@
-import logo from './logo.svg';
-import './App.css';
-
 import {io} from 'socket.io-client'
 import { useEffect, useState } from 'react';
 import CreateUser from './components/CreateUser';
@@ -24,6 +21,9 @@ function App() {
   const selectUser = (name) => {
     setStep(3);
   }
+  const handleGoBack = () => {
+    setStep(2);
+  }
 
   useEffect(() => {
     socket.on("new_user",(user) => {
@@ -34,15 +34,15 @@ function App() {
 
 
   return (
-    <div className="App">
-      <header className="App-header">
-          <h1>Messenger App </h1>
+    <div className="container">
+      <header className="container mx-auto my-3 text-center">
+          <h1 className='text-white fw-bold'>Messenger App </h1>
       </header>
-      <div className='card'>
-        <div className='chatBox'>
+      <div className='card col-5 mx-auto'>
+        <div className='card-body p-0'>
             {step === 1 && <CreateUser handleSetUsername={handleSetUsername} value={username} onChange={setusername}/>}
-            {step === 2 && <OnlineUsers data={users} selectUser={selectUser}/>}
-            {step === 3 && <MessageContainer />}
+            {step === 2 && <OnlineUsers username={username} data={users} selectUser={selectUser}/>}
+            {step === 3 && <MessageContainer handleGoBack={handleGoBack} />}
 
         </div>
         </div>
