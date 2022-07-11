@@ -9,7 +9,7 @@ const OnlineUsers = ({selectUser,data,username}) => {
             data && Object.keys(data).map((user,index) => username !== user && (
               <li style={{cursor:"pointer"}} className='list-group-item list-group-item-action' 
               key={index} 
-              onClick={() => selectUser("srk")}>
+              onClick={() => selectUser(user)}>
                 <span className='me-2'>
                   <img alt='demo' src={`https://picsum.photos/30/30?random=${index}`} className='rounded-circle'/></span>
                   <span>{user}</span>
