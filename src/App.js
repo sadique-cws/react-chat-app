@@ -1,5 +1,5 @@
 import {io} from 'socket.io-client'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CreateUser from './components/CreateUser';
 import OnlineUsers from './components/OnlineUsers';
 import MessageContainer from './components/MessageContainer';
@@ -14,6 +14,13 @@ function App() {
   const [media,setMedia] = useState(null)
   const [message, setMessage] = useState("")
   const [reciever, setReciever] = useState("")
+  const [groupMessage, setGroupMessage] = useState({})
+  const recieverRef = useRef(null)
+
+
+const sortNames = (username1, username2) => {
+  return [username1, username2].sort().join('-');
+}
 
   const handleSetUsername = () => {
     console.log(username)
@@ -23,6 +30,7 @@ function App() {
 
   const selectUser = (name) => {
     setReciever(name)
+    recieverRef.current = name;
     setStep(3);
   }
   const handleGoBack = () => {
@@ -40,6 +48,22 @@ function App() {
 
     socket.emit("send_message", data);
 
+
+    const key = sortNames(username,reciever);
+
+    if(key in groupMessage){
+      groupMessage[key].push(data)
+    }
+    else{
+      groupMessage[key] = [data];
+    }
+
+    console.log(groupMessage)
+
+    //alok, amit [alok-amit] => [m1, m2, m3]
+    //alok, sachin [alok-sachin] => [m1, m2, m2]
+    //amit, sachin [amit-sachin] => [m1, m2, m3]
+
   }
 
   useEffect(() => {
@@ -47,8 +71,27 @@ function App() {
       console.log([user])
       setUsers(user);
     })
-  },[users])
 
+
+    socket.on("new_message", (data) => {
+      // console.log(data)
+  
+      setGroupMessage(prevGroupMessage => {
+        const msg = prevGroupMessage;
+        const key = sortNames(username, recieverRef.current);
+        if(key in msg){
+          msg[key] = [...msg[key], data]
+        }
+        else{
+          msg[key] = [data]
+        }
+
+        return [ ...msg ]
+      })
+  })
+  },[])
+
+  console.log(`testing${groupMessage}`)
 
   return (
     <div className="container">
