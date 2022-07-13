@@ -23,7 +23,6 @@ const sortNames = (username1, username2) => {
 }
 
   const handleSetUsername = () => {
-    console.log(username)
     socket.emit("new_user",username)
     setStep(2);
   }
@@ -47,6 +46,7 @@ const sortNames = (username1, username2) => {
     }
 
     socket.emit("send_message", data);
+    setMessage("")
 
 
     const key = sortNames(username,reciever);
@@ -58,7 +58,6 @@ const sortNames = (username1, username2) => {
       groupMessage[key] = [data];
     }
 
-    console.log(groupMessage)
 
     //alok, amit [alok-amit] => [m1, m2, m3]
     //alok, sachin [alok-sachin] => [m1, m2, m2]
@@ -86,12 +85,12 @@ const sortNames = (username1, username2) => {
           msg[key] = [data]
         }
 
-        return [ ...msg ]
+        return {...msg}
       })
   })
-  },[])
+  },[groupMessage])
 
-  console.log(`testing${groupMessage}`)
+  console.log(groupMessage)
 
   return (
     <div className="container">
@@ -102,7 +101,15 @@ const sortNames = (username1, username2) => {
         <div className='card-body p-0'>
             {step === 1 && <CreateUser handleSetUsername={handleSetUsername} value={username} onChange={setusername}/>}
             {step === 2 && <OnlineUsers username={username} data={users} selectUser={selectUser}/>}
-            {step === 3 && <MessageContainer reciever={reciever} value={message} onChange={setMessage} sendMessage={sendMessage} handleGoBack={handleGoBack} />}
+            {step === 3 && <MessageContainer
+            reciever={reciever} 
+            value={message} 
+            onChange={setMessage} 
+            sendMessage={sendMessage} 
+            handleGoBack={handleGoBack} 
+            sortNames={sortNames}
+            groupMessage={groupMessage}
+            username={username}/>}
 
         </div>
         </div>
