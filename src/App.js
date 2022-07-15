@@ -50,15 +50,16 @@ const sortNames = (username1, username2) => {
 
 
     const key = sortNames(username,reciever);
-
-    if(key in groupMessage){
-      groupMessage[key].push(data)
+    const tempGroupMessage = {...groupMessage};
+    if(key in tempGroupMessage){
+      tempGroupMessage[key] = [...tempGroupMessage[key],data]
     }
     else{
-      groupMessage[key] = [data];
+      tempGroupMessage[key] = [data];
     }
 
 
+    setGroupMessage({...tempGroupMessage})
     //alok, amit [alok-amit] => [m1, m2, m3]
     //alok, sachin [alok-sachin] => [m1, m2, m2]
     //amit, sachin [amit-sachin] => [m1, m2, m3]
@@ -76,8 +77,8 @@ const sortNames = (username1, username2) => {
       // console.log(data)
   
       setGroupMessage(prevGroupMessage => {
-        const msg = prevGroupMessage;
-        const key = sortNames(username, recieverRef.current);
+        const msg = {...prevGroupMessage};
+        const key = sortNames(data.sender, data.reciever);
         if(key in msg){
           msg[key] = [...msg[key], data]
         }
@@ -88,7 +89,7 @@ const sortNames = (username1, username2) => {
         return {...msg}
       })
   })
-  },[groupMessage])
+  },[])
 
   console.log(groupMessage)
 
@@ -97,7 +98,7 @@ const sortNames = (username1, username2) => {
       <header className="container mx-auto my-3 text-center">
           <h1 className='text-white fw-bold'>Messenger App </h1>
       </header>
-      <div className='card col-5 mx-auto'>
+      <div className='card col-lg-5 col-12 mx-auto'>
         <div className='card-body p-0'>
             {step === 1 && <CreateUser handleSetUsername={handleSetUsername} value={username} onChange={setusername}/>}
             {step === 2 && <OnlineUsers username={username} data={users} selectUser={selectUser}/>}

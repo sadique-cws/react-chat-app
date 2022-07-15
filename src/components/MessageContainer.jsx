@@ -14,13 +14,16 @@ const MessageContainer = ({handleGoBack,sendMessage,value,onChange,reciever,sort
 
       {reciever}</div>
     <div className='card-body' style={{height:"300px"}}>
-       <ul>
+       <ul className='nav flex-column'>
        {(messages?.length) > 0 ? messages.map((msg,index) => (
-          <li key={index}>
-              <div className="profile-pic">
+          <li className='nav-item nav-link' key={index} style={{
+            display:"flex",
+            flexDirection:(username == msg.reciever)? "row": "row-reverse",
+          }}>
+              {/* <div className="profile-pic">
                 <img src="https://picsum.photos/50/50" alt="" />
-              </div>
-              <div className="msg-text">{msg.message}</div>
+              </div> */}
+              <div className="badge bg-success ">{msg.message}</div>
           </li>
        )) : null} 
        </ul>
