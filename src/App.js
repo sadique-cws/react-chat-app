@@ -60,6 +60,12 @@ const sortNames = (username1, username2) => {
 
 
     setGroupMessage({...tempGroupMessage})
+
+
+      if(media !== null){
+        setMedia(null);
+      }
+
     //alok, amit [alok-amit] => [m1, m2, m3]
     //alok, sachin [alok-sachin] => [m1, m2, m2]
     //amit, sachin [amit-sachin] => [m1, m2, m3]
@@ -110,7 +116,9 @@ const sortNames = (username1, username2) => {
             handleGoBack={handleGoBack} 
             sortNames={sortNames}
             groupMessage={groupMessage}
-            username={username}/>}
+            username={username}
+            setMedia={setMedia}
+            />}
 
         </div>
         </div>
