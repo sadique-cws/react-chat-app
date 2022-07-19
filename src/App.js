@@ -42,7 +42,8 @@ const sortNames = (username1, username2) => {
       sender:username,
       message,
       reciever,
-      media
+      media,
+      view:false,
     }
 
     socket.emit("send_message", data);
@@ -52,10 +53,10 @@ const sortNames = (username1, username2) => {
     const key = sortNames(username,reciever);
     const tempGroupMessage = {...groupMessage};
     if(key in tempGroupMessage){
-      tempGroupMessage[key] = [...tempGroupMessage[key],data]
+      tempGroupMessage[key] = [...tempGroupMessage[key],{...data,view:false}]
     }
     else{
-      tempGroupMessage[key] = [data];
+      tempGroupMessage[key] = [{...data,view:false}];
     }
 
 
@@ -72,6 +73,15 @@ const sortNames = (username1, username2) => {
 
   }
 
+  const checkUnseenMessages = (user) => {
+    // here user = reciever
+      const key = sortNames(username,user);
+      let unseenmsg = [];
+      if(key in groupMessage){
+        unseenmsg = groupMessage[key].filter((msg) => msg.reciever === username && !msg.view)
+      }
+      return unseenmsg.length;
+  }
   useEffect(() => {
     socket.on("all_user",(user) => {
       console.log([user])
@@ -97,6 +107,20 @@ const sortNames = (username1, username2) => {
   })
   },[])
 
+
+  useEffect(() => {
+    updateMsgView();
+  },[reciever])
+
+
+  const updateMsgView = () => {
+    const key = sortNames(username,reciever);
+    if(key in groupMessage){
+      const msgs = groupMessage[key].map(msg => !msg.view ? {...msg, view:true} : msg)
+
+      groupMessage[key] = [...msgs];
+    }
+  }
   console.log(groupMessage)
 
   return (
@@ -107,7 +131,13 @@ const sortNames = (username1, username2) => {
       <div className='card col-lg-5 col-12 mx-auto'>
         <div className='card-body p-0'>
             {step === 1 && <CreateUser handleSetUsername={handleSetUsername} value={username} onChange={setusername}/>}
-            {step === 2 && <OnlineUsers username={username} data={users} selectUser={selectUser}/>}
+            
+            {step === 2 && <OnlineUsers 
+            username={username} 
+            data={users} 
+            selectUser={selectUser} 
+            checkUnseenMessages={checkUnseenMessages}/>}
+
             {step === 3 && <MessageContainer
             reciever={reciever} 
             value={message} 
