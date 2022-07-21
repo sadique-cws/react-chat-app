@@ -13,12 +13,12 @@ const MessageContainer = ({handleGoBack,sendMessage,value,onChange,reciever,sort
         <img src="https://img.icons8.com/ios-glyphs/30/000000/circled-left.png" onClick={() => handleGoBack()} alt="" />
 
       {reciever}</div>
-    <div className='card-body' style={{height:"300px",overflow:"auto"}}>
-       <ul className='nav flex-column'>
+    <div className='card-body'>
+       <ul className='flex-column'  style={{height:"300px",overflow:"auto"}}>
        {(messages?.length) > 0 ? messages.map((msg,index) => (
-          <li className='nav-item nav-link' key={index} style={{
-            display:"flex",
-            flexDirection:(username == msg.reciever)? "row": "row-reverse",
+          <>
+          <li className='d-block' key={index} style={{
+            float:(username == msg.reciever)? "left": "right",
           }}>
               {/* <div className="profile-pic">
                 <img src="https://picsum.photos/50/50" alt="" />
@@ -26,6 +26,7 @@ const MessageContainer = ({handleGoBack,sendMessage,value,onChange,reciever,sort
               {( msg.message !== '') ? <div className="badge bg-success px-2">{msg.message}</div> : null}
               {msg.media && msg.media.image ? <img alt={msg.media.name} src={msg.media.content}className="d-block" width='100%' height="auto"/> : null}
           </li>
+          <br/></>
        )) : null} 
        </ul>
     </div>

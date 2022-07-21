@@ -36,6 +36,17 @@ const sortNames = (username1, username2) => {
     setStep(2);
   }
 
+  const goBottom = () => {
+    const el = document.querySelector(".card-body ul");
+
+    console.log(el)
+
+    if(el){
+      el.scrollTop = el.scrollHeight;
+      console.log(el.screenTop);
+    }
+  }
+
   const sendMessage = (e) => {
     e.preventDefault();
     const data = {
@@ -95,6 +106,11 @@ const sortNames = (username1, username2) => {
       setGroupMessage(prevGroupMessage => {
         const msg = {...prevGroupMessage};
         const key = sortNames(data.sender, data.reciever);
+
+        if(recieverRef.current === data.sender){
+          data.view = true;
+        }
+
         if(key in msg){
           msg[key] = [...msg[key], data]
         }
@@ -112,6 +128,16 @@ const sortNames = (username1, username2) => {
     updateMsgView();
   },[reciever])
 
+  useEffect(() => {
+    const key = sortNames(username,reciever);
+
+    if(key in groupMessage){
+      if(groupMessage[key].length > 0){
+        goBottom();
+      }
+    }
+   
+},[groupMessage])
 
   const updateMsgView = () => {
     const key = sortNames(username,reciever);
